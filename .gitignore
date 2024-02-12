@@ -1,2 +1,5 @@
 #Node JS
 node_modules/
+#env files 
+src/config/.env
+src/config/.env.local
