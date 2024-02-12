@@ -20,6 +20,11 @@ const userSchema = new Schema({
   password: {
     type: String, // 'String' should be capitalized
   },
+  role: {
+    type: String, // 'String' should be capitalized
+    default: "student",
+    enum: ["cashier", "student", "registrar"],
+  },
 });
 
 const User = model("User", userSchema); // 'new' is not required here

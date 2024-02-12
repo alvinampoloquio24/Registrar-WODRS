@@ -1,8 +1,13 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
+const jsonwebtoken = require("jsonwebtoken");
 
 const addUser = async function (req, res) {
   try {
-    const user = await User.create(req.body);
+    const userData = req.body;
+    // hash plain password before saving to databse
+    userData.password = await bcrypt.hash(userData.password, 8);
+    const user = await User.create(userData);
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);
@@ -44,5 +49,28 @@ const deleteUser = async function (req, res) {
     console.log(error);
   }
 };
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-module.exports = { addUser, updateUser, getUsers, deleteUser };
+    const existUser = await User.findOne({ email });
+    if (!existUser) {
+      return res.status(400).json({ message: "Wrong credentials. " });
+    }
+    const isMatch = bcrypt.compare(password, existUser.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Wrong credentials. " });
+    }
+    const token = jsonwebtoken.sign(
+      { _id: existUser._id.toString() },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.TOKEN_EXPIRE }
+    );
+    return res.status(200).json({ existUser, token });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+};
+
+module.exports = { addUser, updateUser, getUsers, deleteUser, login };
