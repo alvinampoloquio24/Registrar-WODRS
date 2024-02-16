@@ -17,9 +17,12 @@ const requestSchema = new Schema(
       type: String,
     },
     isOwner: {
-      type: Boolean,
+      type: String,
     },
     documentationType: {
+      type: String,
+    },
+    relationshipToOwner: {
       type: String,
     },
     status: {
