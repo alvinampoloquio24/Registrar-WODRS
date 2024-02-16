@@ -32,5 +32,38 @@ const getSelfRequest = async function (req, res) {
     return res.send(error);
   }
 };
+const getRequestStatus = async function (req, res) {
+  try {
+    const id = req.user._id;
 
-module.exports = { addRequest, getRequests, getSelfRequest };
+    const [pending, complete, processing, realising] = await Promise.all([
+      Request.countDocuments({ ownerId: id, status: "pending" }),
+      Request.countDocuments({ ownerId: id, status: "complete" }),
+      Request.countDocuments({ ownerId: id, status: "processing" }),
+      Request.countDocuments({ ownerId: id, status: "realising" }),
+    ]);
+
+    const status = { pending, realising, complete, processing };
+
+    return res.status(200).json(status);
+  } catch (error) {
+    return res.send(error);
+  }
+};
+const getRequestByStatus = async function (req, res) {
+  try {
+    const status = req.query.status;
+    const requests = await Request.find({ ownerId: req.user._id, status });
+
+    return res.status(200).json(requests);
+  } catch (error) {
+    return res.send(error);
+  }
+};
+module.exports = {
+  addRequest,
+  getRequests,
+  getSelfRequest,
+  getRequestByStatus,
+  getRequestStatus,
+};

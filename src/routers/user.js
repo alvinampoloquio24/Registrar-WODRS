@@ -10,6 +10,8 @@ const {
   addRequest,
   getRequests,
   getSelfRequest,
+  getRequestStatus,
+  getRequestByStatus,
 } = require("../controllers/request");
 const auth = require("../middleware/auth");
 const router = express.Router();
@@ -23,5 +25,7 @@ router.post("/login", login);
 router.post("/addRequest", auth, addRequest);
 router.get("/getRequests", auth, getRequests);
 router.get("/getSelfRequest", auth, getSelfRequest);
+router.get("/getRequestStatus", auth, getRequestStatus);
+router.get("/getRequestByStatus", auth, getRequestByStatus);
 
 module.exports = router;

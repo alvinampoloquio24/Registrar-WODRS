@@ -22,6 +22,11 @@ const requestSchema = new Schema(
     documentationType: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: ["pending", "processing", "realising", "complete"],
+      default: "pending",
+    },
     noOfCopies: {
       type: String,
     },

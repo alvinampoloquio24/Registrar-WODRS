@@ -66,7 +66,7 @@ const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: process.env.TOKEN_EXPIRE }
     );
-    return res.status(200).json({ existUser, token });
+    return res.status(200).json({ user: existUser, token });
   } catch (error) {
     console.log(error);
     return res.status(500).send(error);
