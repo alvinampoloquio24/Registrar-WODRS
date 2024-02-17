@@ -16,6 +16,7 @@ const userSchema = new Schema({
   },
   email: {
     type: String, // 'String' should be capitalized
+    unique: true,
   },
   password: {
     type: String, // 'String' should be capitalized

@@ -5,6 +5,12 @@ const jsonwebtoken = require("jsonwebtoken");
 const addUser = async function (req, res) {
   try {
     const userData = req.body;
+    const isEmailExist = await User.findOne({ email: req.body.email });
+    if (isEmailExist) {
+      return res
+        .status(400)
+        .json({ message: "Email Adress is already exist. " });
+    }
     // hash plain password before saving to databse
     userData.password = await bcrypt.hash(userData.password, 8);
     const user = await User.create(userData);
