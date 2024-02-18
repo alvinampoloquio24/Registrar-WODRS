@@ -15,6 +15,12 @@ const {
   editSelfRequest,
   deleteRequest,
 } = require("../controllers/request");
+const {
+  addCourse,
+  getCourse,
+  deleteCourse,
+  editCourse,
+} = require("../controllers/course");
 const auth = require("../middleware/auth");
 const router = express.Router();
 
@@ -31,5 +37,10 @@ router.get("/getRequestStatus", auth, getRequestStatus);
 router.get("/getRequestByStatus", auth, getRequestByStatus);
 router.post("/editSelfRequest/:id", auth, editSelfRequest);
 router.delete("/deleteRequest/:id", auth, deleteRequest);
+//course
+router.post("/addCourse", auth, addCourse);
+router.get("/getCourse", auth, getCourse);
+router.post("/editCourse/:id", auth, editCourse);
+router.delete("/deleteCourse/:id", auth, deleteCourse);
 
 module.exports = router;
