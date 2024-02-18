@@ -8,7 +8,7 @@ const courseSchema = new Schema({
   department: {
     type: String,
   },
-  descrition: {
+  description: {
     type: String,
   },
 });
