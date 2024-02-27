@@ -7,7 +7,7 @@ const connectToDatabase = require("./config/database");
 const app = express();
 app.use(express.json());
 app.use(cors());
-connectToDatabase();
+// connectToDatabase();
 
 app.get("/", (req, res) => {
   res.send("hello");

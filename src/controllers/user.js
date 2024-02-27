@@ -1,11 +1,13 @@
 const User = require("../models/user");
+const UserService = require("../services/user");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 
 const addUser = async function (req, res) {
   try {
     const userData = req.body;
-    const isEmailExist = await User.findOne({ email: req.body.email });
+    // const isEmailExist = await User.findOne({ email: req.body.email });
+    const isEmailExist = await UserService.findOne({ email: req.body.email });
     if (isEmailExist) {
       return res
         .status(400)
@@ -13,7 +15,8 @@ const addUser = async function (req, res) {
     }
     // hash plain password before saving to databse
     userData.password = await bcrypt.hash(userData.password, 8);
-    const user = await User.create(userData);
+    // const user = await User.create(userData);
+    const user = await UserService.createUser(userData);
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);
@@ -25,7 +28,8 @@ const updateUser = async function (req, res) {
     if (!id) {
       return res.status(400).json({ message: "Id is needed. " });
     }
-    const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+    // const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+    const user = await UserService.findByIdAndUpdate(id, req.body);
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);
@@ -33,7 +37,8 @@ const updateUser = async function (req, res) {
 };
 const getUsers = async function (req, res) {
   try {
-    const users = await User.find();
+    // const users = await User.find();
+    const users = await UserService.findAll();
     return res.status(201).json(users);
   } catch (error) {
     console.log(error);
