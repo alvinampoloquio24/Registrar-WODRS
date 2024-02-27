@@ -22,7 +22,7 @@ const findByIdAndUpdate = async (id, update) => {
   try {
     const user = await User.findByPk(id);
     if (!user) {
-      throw new Error(`User with ID ${userId} not found.`);
+      return null;
     }
     await user.update(update);
     return user;
@@ -36,11 +36,17 @@ const findAll = async function (params) {
     throw error;
   }
 };
+const findByIdAndDelete = async function (id) {
+  try {
+    return await User.destroy({ where: { id: id } });
+  } catch (error) {}
+};
 
 const UserDb = {
   createUser,
   findOne,
   findAll,
   findByIdAndUpdate,
+  findByIdAndDelete,
 };
 module.exports = UserDb;

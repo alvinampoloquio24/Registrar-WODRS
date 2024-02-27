@@ -24,10 +24,14 @@ const findByIdAndUpdate = async (id, update) => {
 const findAll = async () => {
   return await UserDb.findAll();
 };
+const findByIdAndDelete = async (id) => {
+  return await UserDb.findByIdAndDelete(id);
+};
 const UserService = {
   findOne,
   createUser,
   findByIdAndUpdate,
   findAll,
+  findByIdAndDelete,
 };
 module.exports = UserService;

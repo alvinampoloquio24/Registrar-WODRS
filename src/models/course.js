@@ -1,17 +1,42 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
 
-const { Schema, model } = mongoose;
-const courseSchema = new Schema({
+const Course = sequelize.define("Course", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   name: {
-    type: String,
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   department: {
-    type: String,
+    type: DataTypes.STRING,
+    allowNull: true,
   },
-  descrition: {
-    type: String,
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
 });
 
-const Course = model("Corse", courseSchema);
 module.exports = Course;
+
+// const mongoose = require("mongoose");
+
+// const { Schema, model } = mongoose;
+// const courseSchema = new Schema({
+//   name: {
+//     type: String,
+//   },
+//   department: {
+//     type: String,
+//   },
+//   descrition: {
+//     type: String,
+//   },
+// });
+
+// const Course = model("Corse", courseSchema);
+// module.exports = Course;

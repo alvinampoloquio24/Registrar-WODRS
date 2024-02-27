@@ -1,6 +1,5 @@
 const jsonwebtoken = require("jsonwebtoken");
-const User = require("../models/user");
-
+const UserDb = require("../dbAccess/user");
 const auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
@@ -9,8 +8,9 @@ const auth = async (req, res, next) => {
     }
 
     const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({
-      _id: decoded._id,
+
+    const user = await UserDb.findOne({
+      id: decoded.id,
     });
 
     if (!user) {
