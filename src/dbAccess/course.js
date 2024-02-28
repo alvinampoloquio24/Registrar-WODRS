@@ -18,14 +18,17 @@ const findAll = async () => {
   }
 };
 const findByIdAndUpdate = async (id, update) => {
-  const course = await Course.findByPk(id);
+  try {
+    const course = await Course.findByPk(id);
 
-  if (!course) {
-    return null;
+    if (!course) {
+      return null;
+    }
+    await course.update(update);
+    return course;
+  } catch (error) {
+    throw error;
   }
-
-  await course.update(update);
-  return course;
 };
 
 const findByIdAndDelete = async (id) => {

@@ -2,7 +2,7 @@ const UserService = require("../services/user");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 
-const addUser = async function (req, res) {
+const addUser = async function (req, res, next) {
   try {
     const userData = req.body;
 
@@ -18,10 +18,10 @@ const addUser = async function (req, res) {
     const user = await UserService.createUser(userData);
     return res.status(201).json(user);
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
-const updateUser = async function (req, res) {
+const updateUser = async function (req, res, next) {
   try {
     const id = req.params.id;
     if (req.body.id) {
@@ -39,18 +39,18 @@ const updateUser = async function (req, res) {
     }
     return res.status(200).json(user);
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
-const getUsers = async function (req, res) {
+const getUsers = async function (req, res, next) {
   try {
     const users = await UserService.findAll();
     return res.status(201).json(users);
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
-const deleteUser = async function (req, res) {
+const deleteUser = async function (req, res, next) {
   try {
     const id = req.params.id;
     if (!id) {
@@ -60,16 +60,14 @@ const deleteUser = async function (req, res) {
     if (!user) {
       return res.status(400).json({ message: "No user with that id. " });
     }
-
     return res.status(200).json({ message: "Delete Successfully. " });
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     const existUser = await UserService.findOne({ email });
 
     if (!existUser) {
@@ -87,7 +85,7 @@ const login = async (req, res) => {
     return res.status(200).json({ user: existUser, token });
   } catch (error) {
     console.log(error);
-    return res.status(500).send(error);
+    return next(error);
   }
 };
 

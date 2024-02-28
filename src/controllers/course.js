@@ -1,6 +1,6 @@
 const CourseService = require("../services/course");
 
-const addCourse = async function (req, res) {
+const addCourse = async function (req, res, next) {
   try {
     const isRegistrar = req.user.role === "registrar";
     if (!isRegistrar) {
@@ -11,10 +11,10 @@ const addCourse = async function (req, res) {
     return res.status(201).json({ message: "Add succesfully", course });
   } catch (error) {
     console.log(error);
-    return res.send(error);
+    return next(error);
   }
 };
-const getCourse = async function (req, res) {
+const getCourse = async function (req, res, next) {
   try {
     const isRegistrar = req.user.role === "registrar";
     if (!isRegistrar) {
@@ -23,10 +23,10 @@ const getCourse = async function (req, res) {
     const courses = await CourseService.getAllCourse();
     return res.status(201).json(courses);
   } catch (error) {
-    return res.send(error);
+    return next(error);
   }
 };
-const editCourse = async function (req, res) {
+const editCourse = async function (req, res, next) {
   try {
     const isRegistrar = req.user.role === "registrar";
     if (!isRegistrar) {
@@ -46,10 +46,10 @@ const editCourse = async function (req, res) {
     return res.status(201).json({ message: "Update Successfully. ", course });
   } catch (error) {
     console.log(error);
-    return res.send(error);
+    return next(error);
   }
 };
-const deleteCourse = async function (req, res) {
+const deleteCourse = async function (req, res, next) {
   try {
     const isRegistrar = req.user.role === "registrar";
     if (!isRegistrar) {
@@ -67,7 +67,7 @@ const deleteCourse = async function (req, res) {
     }
     return res.status(201).json({ message: "Delete Successfully. ", course });
   } catch (error) {
-    return res.send(error);
+    return next(error);
   }
 };
 

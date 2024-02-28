@@ -34,18 +34,16 @@ module.exports = {
         allowNull: false,
       },
       role: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.ENUM("student", "cashier", "registrar", "admin"),
+        defaultValue: "student",
       },
       createdAt: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        type: Sequelize.DATE,
       },
       updatedAt: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        type: Sequelize.DATE,
       },
     });
   },

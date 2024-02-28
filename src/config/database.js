@@ -1,16 +1,23 @@
-require("dotenv").config({ path: "./src/config/.env" }); // Load .env file from src/config folder
-
 const { Sequelize } = require("sequelize");
+const config = require("../config/config");
 
-// Now process.env should have the variables loaded from .env
-const { PG_PORT, USER, PASSWORD, DB_NAME, HOST } = process.env;
-console.log(PG_PORT);
+// Determine the environment
+const env = process.env.NODE_ENV || "development";
+console.log(config[env].database);
 
-// Initialize Sequelize with database credentials
-const sequelize = new Sequelize(DB_NAME, USER, PASSWORD, {
-  host: HOST,
-  port: PG_PORT,
-  dialect: "postgres", // Specify the dialect
-});
+// Initialize Sequelize with database credentials based on the environment
+const sequelize = new Sequelize(
+  config[env].database,
+  config[env].username,
+  config[env].password,
+  {
+    host: config[env].host,
+    port: config[env].port,
+    dialect: config[env].dialect,
+    dialectOptions: {
+      ssl: config[env].dialectOptions.ssl,
+    },
+  }
+);
 
 module.exports = sequelize;

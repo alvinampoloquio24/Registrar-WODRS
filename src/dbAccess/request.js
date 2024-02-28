@@ -8,7 +8,7 @@ const createRequest = async (params) => {
     throw error;
   }
 };
-const findAll = async (params) => {
+const findAll = async () => {
   try {
     const requests = await Request.findAll();
     return requests;
@@ -94,8 +94,12 @@ const getRequestStatus = async (id) => {
   }
 };
 const getRquestByStatus = async (id, status) => {
-  const request = await Request.findAll({ where: { ownerId: id, status } });
-  return request;
+  try {
+    const request = await Request.findAll({ where: { ownerId: id, status } });
+    return request;
+  } catch (error) {
+    throw error;
+  }
 };
 module.exports = {
   createRequest,

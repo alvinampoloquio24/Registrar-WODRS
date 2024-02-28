@@ -10,7 +10,6 @@ const createUser = async function (userData) {
 };
 const findOne = async function (params) {
   try {
-    console.log(params);
     const user = await User.findOne({ where: params }); // Pass the params within the 'where' property
 
     return user;

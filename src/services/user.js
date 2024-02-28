@@ -22,10 +22,18 @@ const findByIdAndUpdate = async (id, update) => {
   }
 };
 const findAll = async () => {
-  return await UserDb.findAll();
+  try {
+    return await UserDb.findAll();
+  } catch (error) {
+    throw error;
+  }
 };
 const findByIdAndDelete = async (id) => {
-  return await UserDb.findByIdAndDelete(id);
+  try {
+    return await UserDb.findByIdAndDelete(id);
+  } catch (error) {
+    throw error;
+  }
 };
 const UserService = {
   findOne,

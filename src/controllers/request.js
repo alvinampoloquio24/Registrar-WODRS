@@ -1,6 +1,6 @@
 const RequestService = require("../services/request");
 
-const addRequest = async function (req, res) {
+const addRequest = async function (req, res, next) {
   try {
     let data = req.body;
     data.ownerId = req.user.id;
@@ -8,10 +8,10 @@ const addRequest = async function (req, res) {
     const request = await RequestService.createRequest(data);
     return res.status(201).json({ message: "Add succesfully", request });
   } catch (error) {
-    return res.send(error);
+    return next(error);
   }
 };
-const getRequests = async function (req, res) {
+const getRequests = async function (req, res, next) {
   try {
     if (req.user.role !== "registrar") {
       return res.status(401).json({ message: "Unauthorize Request. " });
@@ -20,19 +20,19 @@ const getRequests = async function (req, res) {
 
     return res.status(200).json(requests);
   } catch (error) {
-    return res.send(error);
+    return next(error);
   }
 };
-const getSelfRequest = async function (req, res) {
+const getSelfRequest = async function (req, res, next) {
   try {
     const requests = await RequestService.findSelfRequest(req.user.id);
 
     return res.status(200).json(requests);
   } catch (error) {
-    return res.send(error);
+    return next(error);
   }
 };
-const getRequestStatus = async function (req, res) {
+const getRequestStatus = async function (req, res, next) {
   try {
     const id = req.user.id;
 
@@ -40,11 +40,10 @@ const getRequestStatus = async function (req, res) {
 
     return res.status(200).json(status);
   } catch (error) {
-    console.log(error);
-    return res.send(error);
+    return next(error);
   }
 };
-const getRequestByStatus = async function (req, res) {
+const getRequestByStatus = async function (req, res, next) {
   try {
     const status = req.query.status;
     const id = req.user.id;
@@ -52,10 +51,10 @@ const getRequestByStatus = async function (req, res) {
 
     return res.status(200).json(requests);
   } catch (error) {
-    return res.send(error);
+    return next(error);
   }
 };
-const editSelfRequest = async function (req, res) {
+const editSelfRequest = async function (req, res, next) {
   try {
     const requestId = req.params.id;
     const update = req.body;
@@ -73,10 +72,10 @@ const editSelfRequest = async function (req, res) {
 
     return res.status(200).json({ message: "Update Successfully. ", request });
   } catch (error) {
-    return res.send(error);
+    return next(error);
   }
 };
-const deleteRequest = async function (req, res) {
+const deleteRequest = async function (req, res, next) {
   try {
     const requestId = req.params.id;
     if (!requestId) {
@@ -89,8 +88,7 @@ const deleteRequest = async function (req, res) {
     }
     return res.status(200).json({ message: "Delete Successfully. ", request });
   } catch (error) {
-    console.log(error);
-    return res.send(error);
+    return next(error);
   }
 };
 module.exports = {
