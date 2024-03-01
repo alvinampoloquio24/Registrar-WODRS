@@ -1,5 +1,4 @@
 const UserDb = require("../dbAccess/user");
-const cacheKey = require("../constant/cacheKey");
 
 const createUser = async (userData) => {
   try {

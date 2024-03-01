@@ -3,9 +3,9 @@ const sequelize = require("../config/database");
 
 const User = sequelize.define("User", {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID, // Adjusted to Sequelize.UUID
+    defaultValue: DataTypes.UUIDV4, // You can use DataTypes.UUIDV4 here as well
     primaryKey: true,
-    autoIncrement: true,
   },
   firstName: {
     type: DataTypes.STRING,
@@ -18,7 +18,7 @@ const User = sequelize.define("User", {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true, // This ensures that the email value is unique across all users
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
@@ -33,7 +33,6 @@ const User = sequelize.define("User", {
     allowNull: false,
   },
   role: {
-    type: DataTypes.STRING,
     type: DataTypes.ENUM("student", "cashier", "registrar", "admin"),
     defaultValue: "student",
   },

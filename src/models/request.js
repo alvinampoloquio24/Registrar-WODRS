@@ -1,15 +1,14 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Request = sequelize.define("Request", {
-  // Assuming you have an ID field in PostgreSQL
+const Request = sequelize.define("Requests", {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataTypes.UUIDV4, // Generate UUID automatically
   },
   ownerId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     references: {
       model: "Users", // Name of the table that contains the users
       key: "id",
