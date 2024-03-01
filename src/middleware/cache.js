@@ -1,19 +1,20 @@
 const { createClient } = require("redis");
 const redisConfig = require("../config/redis");
-
+const cacheKey = require("../constant/cacheKey");
 async function cacheMiddleware(req, res, next) {
-  const userId = req.params.id;
+  const id = req.params.id;
 
   try {
     // Create a Redis client
+
     const client = await createClient(redisConfig)
       .on("error", (err) => console.log("Redis Client Error", err))
       .connect();
 
     // Save user data
 
-    const userKey = `user:${userId}`; // Create a unique key for the user
-    const user = await client.get(userKey);
+    const key = cacheKey.user(id);
+    const user = await client.get(key);
 
     if (user) {
       const parse = JSON.parse(user);

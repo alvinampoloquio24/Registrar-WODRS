@@ -22,9 +22,9 @@ const findByIdAndUpdate = async (id, update) => {
     throw error;
   }
 };
-const findAll = async () => {
+const findAll = async (page, pageSize) => {
   try {
-    return await UserDb.findAll();
+    return await UserDb.findAll(page, pageSize);
   } catch (error) {
     throw error;
   }

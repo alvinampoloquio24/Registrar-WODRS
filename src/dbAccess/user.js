@@ -33,14 +33,24 @@ const findByIdAndUpdate = async (id, update) => {
     throw error;
   }
 };
-const findAll = async function () {
+const findAll = async function (page, pageSize) {
   try {
-    const users = await User.findAll();
+    let users;
+    if (!page || !pageSize) {
+      users = await User.findAll();
+    } else {
+      const offset = (page - 1) * pageSize;
+      users = await User.findAll({
+        offset: offset,
+        limit: pageSize,
+      });
+    }
     return users;
   } catch (error) {
     throw error;
   }
 };
+
 const findByIdAndDelete = async function (id) {
   try {
     // First, try to find the user

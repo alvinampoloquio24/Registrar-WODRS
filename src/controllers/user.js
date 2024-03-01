@@ -1,11 +1,12 @@
 const UserService = require("../services/user");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
+const Chance = require("chance");
+const chance = new Chance();
 
 const addUser = async function (req, res, next) {
   try {
     const userData = req.body;
-
     const isEmailExist = await UserService.findOne({ email: req.body.email });
     if (isEmailExist) {
       return res
@@ -14,11 +15,30 @@ const addUser = async function (req, res, next) {
     }
     // hash plain password before saving to databse
     userData.password = await bcrypt.hash(userData.password, 8);
-
     const user = await UserService.createUser(userData);
     return res.status(201).json(user);
   } catch (error) {
     return next(error);
+  }
+};
+const addMultipleUsers = async function (count) {
+  try {
+    for (let i = 0; i < count; i++) {
+      const userData = {
+        firstName: chance.first(),
+        lastName: chance.last(),
+        year: chance.integer({ min: 1, max: 4 }).toString(),
+        course: chance.pickone(["BSCS", "BSIT", "BSIS"]),
+        email: chance.email().toLowerCase(),
+        password: chance.string({ length: 8 }),
+        role: chance.pickone(["student", "admin"]),
+      };
+
+      await addUser({ body: userData }, { json: () => {} }, () => {});
+    }
+    console.log(`${count} users added successfully.`);
+  } catch (error) {
+    console.error("Error adding users:", error);
   }
 };
 const updateUser = async function (req, res, next) {
@@ -44,7 +64,8 @@ const updateUser = async function (req, res, next) {
 };
 const getUsers = async function (req, res, next) {
   try {
-    const users = await UserService.findAll();
+    const { page, pageSize } = req.query;
+    const users = await UserService.findAll(page, pageSize);
     return res.status(201).json(users);
   } catch (error) {
     return next(error);
@@ -89,7 +110,6 @@ const login = async (req, res, next) => {
     return next(error);
   }
 };
-
 const getUserById = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -110,4 +130,5 @@ module.exports = {
   deleteUser,
   login,
   getUserById,
+  addMultipleUsers,
 };
