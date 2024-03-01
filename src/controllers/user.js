@@ -32,11 +32,11 @@ const updateUser = async function (req, res, next) {
     if (!id) {
       return res.status(400).json({ message: "Id is needed. " });
     }
-    // const user = await User.findByIdAndUpdate(id, req.body, { new: true });
     const user = await UserService.findByIdAndUpdate(id, req.body);
     if (!user) {
       return res.status(400).json({ message: "No user with provided Id. " });
     }
+
     return res.status(200).json(user);
   } catch (error) {
     return next(error);
@@ -57,6 +57,7 @@ const deleteUser = async function (req, res, next) {
       return res.status(400).json({ message: "Id required. " });
     }
     const user = await UserService.findByIdAndDelete(id);
+
     if (!user) {
       return res.status(400).json({ message: "No user with that id. " });
     }
@@ -89,4 +90,24 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { addUser, updateUser, getUsers, deleteUser, login };
+const getUserById = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const user = await UserService.findById(id);
+    if (!user) {
+      return res.status(200).json({ message: "User not found" });
+    }
+    return res.status(200).json({ message: "from deb", user });
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return next(error);
+  }
+};
+module.exports = {
+  addUser,
+  updateUser,
+  getUsers,
+  deleteUser,
+  login,
+  getUserById,
+};

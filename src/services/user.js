@@ -1,4 +1,5 @@
 const UserDb = require("../dbAccess/user");
+const cacheKey = require("../constant/cacheKey");
 
 const createUser = async (userData) => {
   try {
@@ -35,11 +36,19 @@ const findByIdAndDelete = async (id) => {
     throw error;
   }
 };
+const findById = async (id) => {
+  try {
+    return await UserDb.findById(id);
+  } catch (error) {
+    throw error;
+  }
+};
 const UserService = {
   findOne,
   createUser,
   findByIdAndUpdate,
   findAll,
   findByIdAndDelete,
+  findById,
 };
 module.exports = UserService;

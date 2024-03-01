@@ -3,7 +3,6 @@ const config = require("../config/config");
 
 // Determine the environment
 const env = process.env.NODE_ENV || "development";
-console.log(config[env].database);
 
 // Initialize Sequelize with database credentials based on the environment
 const sequelize = new Sequelize(

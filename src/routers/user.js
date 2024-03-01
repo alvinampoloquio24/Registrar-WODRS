@@ -5,6 +5,7 @@ const {
   getUsers,
   deleteUser,
   login,
+  getUserById,
 } = require("../controllers/user");
 const {
   addRequest,
@@ -21,12 +22,15 @@ const {
   deleteCourse,
   editCourse,
 } = require("../controllers/course");
+
 const auth = require("../middleware/auth");
+const cache = require("../middleware/cache");
 const router = express.Router();
 
 router.post("/addUser", addUser);
 router.post("/updateUser/:id", updateUser);
 router.get("/getUsers/", getUsers);
+router.get("/getUserById/:id", cache, getUserById);
 router.delete("/deleteUser/:id", deleteUser);
 router.post("/login", login);
 //request
