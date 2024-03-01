@@ -17,6 +17,7 @@ module.exports = (error, req, res, next) => {
   const errMessage = error.message || "Something went wrong";
   const errStatus = error.status || 500;
 
+  console.log(error);
   res.status(errStatus).json({ message: errMessage });
 
   return next();

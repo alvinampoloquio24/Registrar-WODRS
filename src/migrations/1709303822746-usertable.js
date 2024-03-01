@@ -2,15 +2,10 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Drop existing table
-    await queryInterface.dropTable("Users");
-
-    // Create table with UUID as primary key
     await queryInterface.createTable("Users", {
       id: {
         type: Sequelize.UUID,
-        defaultValue: Sequelize.literal("uuid_generate_v4()"),
-        allowNull: false,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
       firstName: {
@@ -52,7 +47,6 @@ module.exports = {
       },
     });
   },
-
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Users");
   },
