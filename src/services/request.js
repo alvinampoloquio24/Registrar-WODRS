@@ -51,4 +51,11 @@ module.exports = {
       throw error;
     }
   },
+  getDocumentReport: async (id, status) => {
+    try {
+      return await RequestDb.getDocumentReport();
+    } catch (error) {
+      throw error;
+    }
+  },
 };

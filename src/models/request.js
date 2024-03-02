@@ -27,7 +27,17 @@ const Request = sequelize.define("Requests", {
     type: DataTypes.STRING,
   },
   documentationType: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM(
+      "TOR",
+      "COR",
+      "COG",
+      "COE",
+      "Good Moral",
+      "CAV",
+      "Others"
+    ),
+    defaultValue: "Others",
+    allowNull: false,
   },
   relationshipToOwner: {
     type: DataTypes.STRING,
@@ -38,6 +48,10 @@ const Request = sequelize.define("Requests", {
   },
   noOfCopies: {
     type: DataTypes.STRING,
+  },
+  paymentMethod: {
+    type: DataTypes.ENUM("Gcash", "Cash"),
+    defaultValue: "Cash",
   },
 });
 

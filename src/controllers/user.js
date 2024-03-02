@@ -115,9 +115,9 @@ const getUserById = async (req, res, next) => {
     const id = req.params.id;
     const user = await UserService.findById(id);
     if (!user) {
-      return res.status(200).json({ message: "User not found" });
+      return res.status(400).json({ message: "User not found" });
     }
-    return res.status(200).json({ message: "from deb", user });
+    return res.status(200).json(user);
   } catch (error) {
     console.error("An error occurred:", error);
     return next(error);

@@ -3,9 +3,9 @@ const sequelize = require("../config/database");
 
 const Course = sequelize.define("Course", {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID, // Adjusted to Sequelize.UUID
+    defaultValue: DataTypes.UUIDV4, // You can use DataTypes.UUIDV4 here as well
     primaryKey: true,
-    autoIncrement: true,
   },
   name: {
     type: DataTypes.STRING,
@@ -22,21 +22,3 @@ const Course = sequelize.define("Course", {
 });
 
 module.exports = Course;
-
-// const mongoose = require("mongoose");
-
-// const { Schema, model } = mongoose;
-// const courseSchema = new Schema({
-//   name: {
-//     type: String,
-//   },
-//   department: {
-//     type: String,
-//   },
-//   descrition: {
-//     type: String,
-//   },
-// });
-
-// const Course = model("Corse", courseSchema);
-// module.exports = Course;

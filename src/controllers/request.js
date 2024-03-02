@@ -1,12 +1,24 @@
 const RequestService = require("../services/request");
 
+const documentType = require("../constant/documentType");
+
 const addRequest = async function (req, res, next) {
   try {
     let data = req.body;
     data.ownerId = req.user.id;
 
+    const providedDocumentType = data.documentationType;
+
+    // Check if the provided document type is not valid
+    if (!Object.values(documentType).includes(providedDocumentType)) {
+      const validDocumentTypes = Object.values(documentType).join(", ");
+      return res.status(400).json({
+        message: `Invalid document type. Valid document types are: ${validDocumentTypes}`,
+      });
+    }
+
     const request = await RequestService.createRequest(data);
-    return res.status(201).json({ message: "Add succesfully", request });
+    return res.status(201).json({ message: "Added successfully", request });
   } catch (error) {
     return next(error);
   }
@@ -91,6 +103,42 @@ const deleteRequest = async function (req, res, next) {
     return next(error);
   }
 };
+const approveRequest = async function (req, res, next) {
+  try {
+    const requestId = req.params.id;
+    if (!requestId) {
+      return res.status(400).json({ message: "Request Id is required. " });
+    }
+    const update = {
+      status: "processing",
+    };
+    const request = await RequestService.findByIdAndUpdate(requestId, update);
+
+    if (!request) {
+      return res.status(400).json({ message: "No request in provided id. " });
+    }
+    return res.status(200).json({ message: "Delete Successfully. ", request });
+  } catch (error) {
+    return next(error);
+  }
+};
+const getAllRequestStatus = async function (req, res, next) {
+  try {
+    const status = await RequestService.getRequestStatus();
+
+    return res.status(200).json(status);
+  } catch (error) {
+    return next(error);
+  }
+};
+const getDocumentReport = async function (req, res, next) {
+  try {
+    const report = await RequestService.getDocumentReport();
+    return res.status(200).json(report);
+  } catch (error) {
+    return next(error);
+  }
+};
 module.exports = {
   addRequest,
   getRequests,
@@ -99,4 +147,7 @@ module.exports = {
   getRequestStatus,
   editSelfRequest,
   deleteRequest,
+  approveRequest,
+  getAllRequestStatus,
+  getDocumentReport,
 };

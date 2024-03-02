@@ -18,7 +18,7 @@ async function cacheMiddleware(req, res, next) {
 
     if (user) {
       const parse = JSON.parse(user);
-      return res.status(401).json({ message: "from redis", parse });
+      return res.status(200).json({ user: parse });
     }
 
     await client.disconnect();
