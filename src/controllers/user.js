@@ -74,14 +74,24 @@ const getUsers = async function (req, res, next) {
 const deleteUser = async function (req, res, next) {
   try {
     const id = req.params.id;
-    if (!id) {
-      return res.status(400).json({ message: "Id required. " });
+    // check if the user is registar or cashier
+    const userRole = await UserService.getUserRole(id);
+    if (!userRole) {
+      return res.status(400).json({ message: "No user with that id. " });
+    }
+    const isAllowedToDelete =
+      userRole === "registrar" || userRole === "cashier";
+    if (isAllowedToDelete) {
+      return res
+        .status(400)
+        .json({ message: `Not allowed to delete the role: ${userRole}` });
     }
     const user = await UserService.findByIdAndDelete(id);
 
     if (!user) {
       return res.status(400).json({ message: "No user with that id. " });
     }
+
     return res.status(200).json({ message: "Delete Successfully. " });
   } catch (error) {
     return next(error);

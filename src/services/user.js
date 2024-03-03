@@ -42,6 +42,13 @@ const findById = async (id) => {
     throw error;
   }
 };
+const getUserRole = async (id) => {
+  try {
+    return await UserDb.getUserRole(id);
+  } catch (error) {
+    throw error;
+  }
+};
 const UserService = {
   findOne,
   createUser,
@@ -49,5 +56,6 @@ const UserService = {
   findAll,
   findByIdAndDelete,
   findById,
+  getUserRole,
 };
 module.exports = UserService;

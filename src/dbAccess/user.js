@@ -85,6 +85,19 @@ const findById = async function (id) {
     throw error;
   }
 };
+const getUserRole = async function (id) {
+  try {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return null;
+    }
+
+    return user.role;
+  } catch (error) {
+    throw error;
+  }
+};
 const UserDb = {
   createUser,
   findOne,
@@ -92,5 +105,6 @@ const UserDb = {
   findByIdAndUpdate,
   findByIdAndDelete,
   findById,
+  getUserRole,
 };
 module.exports = UserDb;

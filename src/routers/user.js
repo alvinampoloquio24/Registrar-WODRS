@@ -35,7 +35,7 @@ router.post("/addUser", addUser);
 router.post("/updateUser/:id", updateUser);
 router.get("/getUsers/", getUsers);
 router.get("/getUserById/:id", cache, getUserById);
-router.delete("/deleteUser/:id", deleteUser);
+router.delete("/deleteUser/:id", auth, deleteUser);
 router.post("/login", login);
 //request
 router.post("/addRequest", auth, addRequest);
