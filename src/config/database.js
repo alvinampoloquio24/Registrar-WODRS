@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const config = require("./config");
 
-const MONGODB_URL = process.env.MONGODB_URL;
-
+const env = process.env.NODE_ENV || "development";
+console.log("Running in", env);
 async function connectToDatabase() {
   try {
-    await mongoose.connect(MONGODB_URL, {
+    await mongoose.connect(config[env].MONGODB_URL, {
       serverSelectionTimeoutMS: 5000,
       // Add any additional options as needed
     });
