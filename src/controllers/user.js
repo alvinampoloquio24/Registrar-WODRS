@@ -28,13 +28,14 @@ const addMultipleUsers = async function (count) {
         firstName: chance.first(),
         lastName: chance.last(),
         year: chance.integer({ min: 1, max: 4 }).toString(),
-        course: chance.pickone(["BSCS", "BSIT", "BSIS"]),
+        course: chance.pickone(["BSCS", "BSIT", "BSIS", "CFMS", "BSOA"]),
         email: chance.email().toLowerCase(),
         password: chance.string({ length: 8 }),
-        role: chance.pickone(["student", "admin"]),
+        role: "student",
       };
 
       await addUser({ body: userData }, { json: () => {} }, () => {});
+      console.log("Hacking NASA attempt: ", i);
     }
     console.log(`${count} users added successfully.`);
   } catch (error) {

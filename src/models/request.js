@@ -10,7 +10,7 @@ const Request = sequelize.define("Requests", {
   ownerId: {
     type: DataTypes.UUID,
     references: {
-      model: "Users", // Name of the table that contains the users
+      model: "Users",
       key: "id",
     },
   },

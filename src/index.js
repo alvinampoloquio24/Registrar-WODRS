@@ -2,7 +2,7 @@ const express = require("express");
 const user = require("./routers/user");
 const errorHander = require("./middleware/errorHandler");
 const cors = require("cors");
-const { addUser, addMultipleUsers } = require("./controllers/user");
+const { addMultipleUsers } = require("./controllers/user");
 
 require("dotenv").config();
 
@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// addMultipleUsers(50);
+// addMultipleUsers(5000);
 
 // Route to set a key in Redis
 
