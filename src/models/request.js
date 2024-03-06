@@ -4,8 +4,8 @@ const { Schema, model } = mongoose;
 const requestSchema = new Schema(
   {
     ownerId: {
-      type: Schema.Types.ObjectId, // Changed type to ObjectId
-      ref: "User", // Assuming 'User' is the model name of the owner
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     controlNumber: {
       type: String,
@@ -19,9 +19,11 @@ const requestSchema = new Schema(
     isOwner: {
       type: String,
     },
-    documentationType: {
-      type: String,
-    },
+    documentationType: [
+      {
+        type: String,
+      },
+    ],
     relationshipToOwner: {
       type: String,
     },
@@ -29,6 +31,14 @@ const requestSchema = new Schema(
       type: String,
       enum: ["pending", "processing", "realising", "complete"],
       default: "pending",
+    },
+    image: {
+      type: String,
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["cash", "Gcash"],
+      default: "cash",
     },
     noOfCopies: {
       type: String,

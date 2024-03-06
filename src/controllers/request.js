@@ -1,14 +1,30 @@
 const Request = require("../models/request");
+const Transaction = require("../models/transaction");
+const crypto = require("crypto");
+const cloudinary = require("../config/cloudinary");
+const sendEmail = require("../email/email");
 
 const addRequest = async function (req, res) {
   try {
     let data = req.body;
     data.ownerId = req.user._id;
+    data.controlNumber = generateControlNumber();
 
+    if (req.file && req.file.path) {
+      // Check if req.file exists before accessing its path
+      const image = await cloudinary.uploader.upload(req.file.path);
+      data.image = image.url;
+    }
     const request = await Request.create(data);
-    return res.status(201).json({ message: "Add succesfully", request });
+    await Transaction.create({ requestDetails: request });
+    // Assuming request.documentationType is an array of strings
+    const documentType = request.documentationType.join(", ");
+
+    await sendEmail(request.controlNumber, documentType, data.emailAddress);
+    return res.status(201).json({ message: "Add successfully", request });
   } catch (error) {
-    return res.send(error);
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 const getRequests = async function (req, res) {
@@ -105,6 +121,79 @@ const deleteRequest = async function (req, res) {
     return res.send(error);
   }
 };
+const getDocumentReport = async function (req, res) {
+  try {
+    // Aggregate documents to count how many belong to each documentationType
+    const aggregation = await Request.aggregate([
+      {
+        $group: {
+          _id: "$documentationType", // Group by the 'documentationType' field
+          count: { $sum: 1 }, // Count the documents in each group
+        },
+      },
+    ]);
+
+    // Initialize an object to hold your counts
+    let counts = {
+      total: 0,
+      TOR: 0,
+      COR: 0,
+      COG: 0,
+      COE: 0,
+      goodMoral: 0,
+      CAV: 0,
+      Others: 0,
+    };
+
+    // Map the aggregation results to your counts object
+    aggregation.forEach((group) => {
+      counts.total += group.count; // Increment the total count
+      if (counts.hasOwnProperty(group._id)) {
+        counts[group._id] = group.count;
+      }
+    });
+
+    // Respond with the counts
+    res.status(200).json(counts);
+  } catch (error) {
+    console.error("Failed to get document report:", error);
+    res.status(500).send("Failed to get document report.");
+  }
+};
+const getAllRequestStatus = async function (req, res) {
+  try {
+    const [pending, complete, processing, realising] = await Promise.all([
+      Request.countDocuments({ status: "pending" }),
+      Request.countDocuments({ status: "complete" }),
+      Request.countDocuments({ status: "processing" }),
+      Request.countDocuments({ status: "realising" }),
+    ]);
+
+    const status = { pending, realising, complete, processing };
+
+    return res.status(200).json(status);
+  } catch (error) {}
+};
+const generateControlNumber = function () {
+  // Generate a random 8-byte hex string
+  const uniqueId = crypto.randomBytes(8).toString("hex");
+
+  // Example format: "CN-YYMMDD-UNIQUEID"
+  const datePart = new Date().toISOString().slice(2, 10).replace(/-/g, "");
+  const controlNumber = `CN-${datePart}-${uniqueId}`;
+
+  return controlNumber;
+};
+const getControlNumber = async function (req, res) {
+  try {
+    const controlNumber = req.params.number;
+    const request = await Request.findOne({ controlNumber });
+    return res.status(200).json(request);
+  } catch (error) {
+    res.send(error);
+  }
+};
+
 module.exports = {
   addRequest,
   getRequests,
@@ -113,4 +202,7 @@ module.exports = {
   getRequestStatus,
   editSelfRequest,
   deleteRequest,
+  getDocumentReport,
+  getAllRequestStatus,
+  getControlNumber,
 };
