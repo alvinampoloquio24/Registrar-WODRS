@@ -13,5 +13,5 @@ const courseSchema = new Schema({
   },
 });
 
-const Course = model("Corse", courseSchema);
+const Course = model("Course", courseSchema);
 module.exports = Course;
