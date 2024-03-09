@@ -29,9 +29,6 @@ const addRequest = async function (req, res) {
 };
 const getRequests = async function (req, res) {
   try {
-    if (req.user.role !== "registrar") {
-      return res.status(401).json({ message: "Unauthorize Request. " });
-    }
     const requests = await Request.find();
 
     return res.status(200).json(requests);
@@ -193,7 +190,16 @@ const getControlNumber = async function (req, res) {
     res.send(error);
   }
 };
-
+const approveRequest = async function (req, res) {
+  try {
+    const id = req.params.id;
+    const request = await Request.findByIdAndUpdate(id, { status: "complete" });
+    return res.status(201).json({ message: "Add successfully", request });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 module.exports = {
   addRequest,
   getRequests,
@@ -205,4 +211,5 @@ module.exports = {
   getDocumentReport,
   getAllRequestStatus,
   getControlNumber,
+  approveRequest,
 };

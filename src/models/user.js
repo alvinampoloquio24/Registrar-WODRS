@@ -24,7 +24,7 @@ const userSchema = new Schema({
   role: {
     type: String, // 'String' should be capitalized
     default: "student",
-    enum: ["cashier", "student", "registrar"],
+    enum: ["cashier", "student", "registrar", "admin"],
   },
 });
 

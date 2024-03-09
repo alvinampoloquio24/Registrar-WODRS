@@ -25,7 +25,31 @@ const updateUser = async function (req, res) {
     if (!id) {
       return res.status(400).json({ message: "Id is needed. " });
     }
-    const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+    let data = req.body;
+    data.password = await bcrypt.hash(data.password, 8);
+    const user = await User.findByIdAndUpdate(id, data, { new: true });
+    return res.status(201).json(user);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const updateSelf = async function (req, res) {
+  try {
+    const id = req.user._id;
+
+    let data = req.body;
+    data.password = await bcrypt.hash(data.password, 8);
+    const user = await User.findByIdAndUpdate(id, data, { new: true });
+    return res.status(201).json(user);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const getSelf = async function (req, res) {
+  try {
+    const id = req.user._id;
+
+    const user = await User.findById(id);
     return res.status(201).json(user);
   } catch (error) {
     console.log(error);
@@ -55,6 +79,22 @@ const deleteUser = async function (req, res) {
     console.log(error);
   }
 };
+const getUserById = async function (req, res) {
+  try {
+    const id = req.params.id;
+    if (!id) {
+      return res.status(400).json({ message: "Id required. " });
+    }
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({ message: "No user with that id. " });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    throw error;
+  }
+};
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -79,4 +119,13 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { addUser, updateUser, getUsers, deleteUser, login };
+module.exports = {
+  addUser,
+  updateUser,
+  getUsers,
+  deleteUser,
+  login,
+  updateSelf,
+  getSelf,
+  getUserById,
+};

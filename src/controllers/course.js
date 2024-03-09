@@ -2,10 +2,6 @@ const Course = require("../models/course");
 
 const addCourse = async function (req, res) {
   try {
-    const isRegistrar = req.user.role === "registrar";
-    if (!isRegistrar) {
-      return res.status(401).json({ message: "Unauthoruize Request. " });
-    }
     const course = await Course.create(req.body);
     return res.status(201).json({ message: "Add succesfully", course });
   } catch (error) {
@@ -14,10 +10,6 @@ const addCourse = async function (req, res) {
 };
 const getCourse = async function (req, res) {
   try {
-    const isRegistrar = req.user.role === "registrar";
-    if (!isRegistrar) {
-      return res.status(401).json({ message: "Unauthoruize Request. " });
-    }
     const courses = await Course.find();
     return res.status(201).json(courses);
   } catch (error) {
@@ -26,10 +18,6 @@ const getCourse = async function (req, res) {
 };
 const editCourse = async function (req, res) {
   try {
-    const isRegistrar = req.user.role === "registrar";
-    if (!isRegistrar) {
-      return res.status(401).json({ message: "Unauthoruize Request. " });
-    }
     const id = req.params.id;
     const update = req.body;
     if (!id) {
@@ -48,10 +36,6 @@ const editCourse = async function (req, res) {
 };
 const deleteCourse = async function (req, res) {
   try {
-    const isRegistrar = req.user.role === "registrar";
-    if (!isRegistrar) {
-      return res.status(401).json({ message: "Unauthoruize Request. " });
-    }
     const id = req.params.id;
     if (!id) {
       return res.status(400).json({ message: "Course id is required. " });

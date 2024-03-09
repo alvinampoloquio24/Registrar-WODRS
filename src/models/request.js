@@ -13,6 +13,9 @@ const requestSchema = new Schema(
     studentId: {
       type: String,
     },
+    purpose: {
+      type: String,
+    },
     emailAddress: {
       type: String,
     },
@@ -29,7 +32,7 @@ const requestSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "processing", "realising", "complete"],
+      enum: ["pending", "processing", "complete"],
       default: "pending",
     },
     image: {
