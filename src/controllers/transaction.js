@@ -5,7 +5,9 @@ const getAllTransaction = async function (req, res) {
     const transaction = await Transaction.find();
     return res.status(200).json(transaction);
   } catch (error) {
-    return res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const approvePayment = async function (req, res) {
@@ -28,8 +30,9 @@ const approvePayment = async function (req, res) {
     await Request.findByIdAndUpdate(reqId, { status: "paid" });
     return res.status(200).json(transaction);
   } catch (error) {
-    console.log(error);
-    return res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 

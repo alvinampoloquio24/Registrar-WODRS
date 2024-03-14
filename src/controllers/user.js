@@ -16,7 +16,9 @@ const addUser = async function (req, res) {
     const user = await User.create(userData);
     return res.status(201).json(user);
   } catch (error) {
-    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const updateUser = async function (req, res) {
@@ -30,7 +32,9 @@ const updateUser = async function (req, res) {
     const user = await User.findByIdAndUpdate(id, data, { new: true });
     return res.status(201).json(user);
   } catch (error) {
-    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const updateSelf = async function (req, res) {
@@ -42,7 +46,9 @@ const updateSelf = async function (req, res) {
     const user = await User.findByIdAndUpdate(id, data, { new: true });
     return res.status(201).json(user);
   } catch (error) {
-    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getSelf = async function (req, res) {
@@ -52,7 +58,9 @@ const getSelf = async function (req, res) {
     const user = await User.findById(id);
     return res.status(201).json(user);
   } catch (error) {
-    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getUsers = async function (req, res) {
@@ -60,7 +68,9 @@ const getUsers = async function (req, res) {
     const users = await User.find();
     return res.status(201).json(users);
   } catch (error) {
-    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const deleteUser = async function (req, res) {
@@ -76,7 +86,9 @@ const deleteUser = async function (req, res) {
 
     return res.status(200).json(user);
   } catch (error) {
-    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getUserById = async function (req, res) {
@@ -92,7 +104,9 @@ const getUserById = async function (req, res) {
 
     return res.status(200).json(user);
   } catch (error) {
-    throw error;
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const login = async (req, res) => {
@@ -114,8 +128,9 @@ const login = async (req, res) => {
     );
     return res.status(200).json({ user: existUser, token });
   } catch (error) {
-    console.log(error);
-    return res.status(500).send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 

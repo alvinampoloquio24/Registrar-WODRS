@@ -23,8 +23,9 @@ const addRequest = async function (req, res) {
     await sendEmail(request.controlNumber, documentType, data.emailAddress);
     return res.status(201).json({ message: "Add successfully", request });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getRequests = async function (req, res) {
@@ -33,7 +34,9 @@ const getRequests = async function (req, res) {
 
     return res.status(200).json(requests);
   } catch (error) {
-    return res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getSelfRequest = async function (req, res) {
@@ -42,7 +45,9 @@ const getSelfRequest = async function (req, res) {
 
     return res.status(200).json(requests);
   } catch (error) {
-    return res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getRequestStatus = async function (req, res) {
@@ -60,7 +65,9 @@ const getRequestStatus = async function (req, res) {
 
     return res.status(200).json(status);
   } catch (error) {
-    return res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getRequestByStatus = async function (req, res) {
@@ -70,7 +77,9 @@ const getRequestByStatus = async function (req, res) {
 
     return res.status(200).json(requests);
   } catch (error) {
-    return res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const editSelfRequest = async function (req, res) {
@@ -99,7 +108,9 @@ const editSelfRequest = async function (req, res) {
 
     return res.status(200).json({ message: "Update Successfully. ", request });
   } catch (error) {
-    return res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const deleteRequest = async function (req, res) {
@@ -115,7 +126,9 @@ const deleteRequest = async function (req, res) {
     }
     return res.status(200).json({ message: "Delete Successfully. ", request });
   } catch (error) {
-    return res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getDocumentReport = async function (req, res) {
@@ -153,8 +166,9 @@ const getDocumentReport = async function (req, res) {
     // Respond with the counts
     res.status(200).json(counts);
   } catch (error) {
-    console.error("Failed to get document report:", error);
-    res.status(500).send("Failed to get document report.");
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const getAllRequestStatus = async function (req, res) {
@@ -169,7 +183,11 @@ const getAllRequestStatus = async function (req, res) {
     const status = { pending, realising, complete, processing };
 
     return res.status(200).json(status);
-  } catch (error) {}
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
+  }
 };
 const generateControlNumber = function () {
   // Generate a random 8-byte hex string
@@ -187,7 +205,9 @@ const getControlNumber = async function (req, res) {
     const request = await Request.findOne({ controlNumber });
     return res.status(200).json(request);
   } catch (error) {
-    res.send(error);
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 const approveRequest = async function (req, res) {
@@ -196,8 +216,9 @@ const approveRequest = async function (req, res) {
     const request = await Request.findByIdAndUpdate(id, { status: "complete" });
     return res.status(201).json({ message: "Add successfully", request });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
 module.exports = {

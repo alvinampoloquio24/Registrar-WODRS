@@ -14,6 +14,7 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 app.use(user);
+
 app.listen(3001, () => {
   console.log("Server is running at 3001");
 });
