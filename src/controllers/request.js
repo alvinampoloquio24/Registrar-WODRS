@@ -10,14 +10,20 @@ const addRequest = async function (req, res) {
     data.ownerId = req.user._id;
     data.controlNumber = generateControlNumber();
 
-    if (req.file && req.file.path) {
-      // Check if req.file exists before accessing its path
-      const image = await cloudinary.uploader.upload(req.file.path);
+    if (req.files && req.files.image && req.files.image.length > 0) {
+      const image = await cloudinary.uploader.upload(req.files.image[0].path);
       data.image = image.url;
     }
+
+    if (req.files && req.files.clearance && req.files.clearance.length > 0) {
+      const clearanceImage = await cloudinary.uploader.upload(
+        req.files.clearance[0].path
+      );
+      data.clearance = clearanceImage.url;
+    }
+
     const request = await Request.create(data);
     await Transaction.create({ requestDetails: request });
-    // Assuming request.documentationType is an array of strings
     const documentType = request.documentationType.join(", ");
 
     await sendEmail(request.controlNumber, documentType, data.emailAddress);
@@ -25,7 +31,7 @@ const addRequest = async function (req, res) {
   } catch (error) {
     return res
       .status(500)
-      .json({ message: "Somthing went wrong. ", error: error.message });
+      .json({ message: "Something went wrong.", error: error.message });
   }
 };
 const getRequests = async function (req, res) {

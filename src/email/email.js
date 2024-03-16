@@ -48,7 +48,6 @@ async function sendEmail(controlNumber, documentationType, to) {
   try {
     // Send mail with defined transport object
     let info = await transporter.sendMail(mailOptions);
-    console.log("Message sent: %s", info.messageId);
   } catch (err) {
     console.error("Error occurred while sending email:", err);
   }
