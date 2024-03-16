@@ -41,7 +41,6 @@ const approvePayment = async function (req, res) {
     }
     const reqId = transaction.requestDetails._id;
 
-    await Request.findByIdAndUpdate(reqId, { status: "paid" });
     return res.status(200).json(transaction);
   } catch (error) {
     return res

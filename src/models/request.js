@@ -32,11 +32,22 @@ const requestSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "processing", "complete"],
+      enum: ["pending", "approved"],
       default: "pending",
     },
     image: {
       type: String,
+    },
+    claim: {
+      type: {
+        name: {
+          type: String,
+        },
+        dateClaim: {
+          type: Date,
+          default: Date.now,
+        },
+      },
     },
     clearance: {
       type: String,

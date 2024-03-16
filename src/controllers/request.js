@@ -219,8 +219,19 @@ const getControlNumber = async function (req, res) {
 const approveRequest = async function (req, res) {
   try {
     const id = req.params.id;
-    const request = await Request.findByIdAndUpdate(id, { status: "complete" });
-    return res.status(201).json({ message: "Add successfully", request });
+    const name = req.body.name;
+    const request = await Request.findByIdAndUpdate(
+      id,
+      {
+        status: "approve",
+        claim: { name },
+      },
+      { new: true }
+    );
+    if (!request) {
+      return res.status(400).json({ message: "No tarnsaction in this Id. " });
+    }
+    return res.status(201).json({ message: "Approve Successfully", request });
   } catch (error) {
     return res
       .status(500)
