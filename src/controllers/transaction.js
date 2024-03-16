@@ -10,6 +10,20 @@ const getAllTransaction = async function (req, res) {
       .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
+const getSelfTransaction = async function (req, res) {
+  try {
+    const id = req.user._id;
+    const transaction = await Transaction.find({
+      "requestDetails.ownerId": id,
+    });
+    return res.status(200).json(transaction);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
+  }
+};
+
 const approvePayment = async function (req, res) {
   try {
     const id = req.params.id;
@@ -39,4 +53,5 @@ const approvePayment = async function (req, res) {
 module.exports = {
   getAllTransaction,
   approvePayment,
+  getSelfTransaction,
 };

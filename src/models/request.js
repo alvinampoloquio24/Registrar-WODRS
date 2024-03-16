@@ -38,6 +38,9 @@ const requestSchema = new Schema(
     image: {
       type: String,
     },
+    clearance: {
+      type: String,
+    },
     paymentMethod: {
       type: String,
       enum: ["cash", "Gcash"],

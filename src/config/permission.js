@@ -11,6 +11,7 @@ const roles = {
     Request: ["readSelf", "create", "updateSelf", "deleteSelf"],
     Course: ["read"],
     Feedback: ["manage"],
+    Transaction: ["readSelf"],
   },
   registrar: {
     User: ["manage"],

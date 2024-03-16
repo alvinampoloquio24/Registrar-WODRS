@@ -32,6 +32,7 @@ const {
 const {
   getAllTransaction,
   approvePayment,
+  getSelfTransaction,
 } = require("../controllers/transaction");
 const { createFeedBack, getFeedback } = require("../controllers/feedBack");
 const auth = require("../middleware/auth");
@@ -51,7 +52,10 @@ router.post(
   "/addRequest",
   auth,
   permission("create", "Request"),
-  upload.single("image"),
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "clearance", maxCount: 1 },
+  ]),
   addRequest
 );
 router.get("/getRequests", auth, permission("read", "Request"), getRequests);
@@ -141,4 +145,10 @@ router.post(
   createFeedBack
 );
 router.get("/getFeedback", auth, permission("read", "Feedback"), getFeedback);
+router.get(
+  "/getSelfTransaction",
+  auth,
+  permission("readSelf", "Transaction"),
+  getSelfTransaction
+);
 module.exports = router;
