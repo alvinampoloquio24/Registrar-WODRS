@@ -33,6 +33,7 @@ const {
   getAllTransaction,
   approvePayment,
 } = require("../controllers/transaction");
+const { createFeedBack, getFeedback } = require("../controllers/feedBack");
 const auth = require("../middleware/auth");
 const permission = require("../middleware/checkPermission");
 const router = express.Router();
@@ -133,4 +134,11 @@ router.post(
   permission("update", "Transaction"),
   approvePayment
 );
+router.post(
+  "/createFeedback",
+  auth,
+  permission("create", "Feedback"),
+  createFeedBack
+);
+router.get("/getFeedback", auth, permission("read", "Feedback"), getFeedback);
 module.exports = router;

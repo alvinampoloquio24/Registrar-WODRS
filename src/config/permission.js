@@ -4,23 +4,27 @@ const roles = {
     Request: ["manage"],
     Transaction: ["manage"],
     Course: ["manage"],
+    Feedback: ["manage"],
   },
   student: {
     User: ["readSelf", "updateSelf"],
     Request: ["readSelf", "create", "updateSelf", "deleteSelf"],
     Course: ["read"],
+    Feedback: ["manage"],
   },
   registrar: {
     User: ["manage"],
     Request: ["manage"],
     Transaction: ["manage"],
     Course: ["manage"],
+    Feedback: ["manage"],
   },
   cashier: {
     User: ["manage"],
     Request: ["manage"],
     Transaction: ["manage"],
     Course: ["manage"],
+    Feedback: ["manage"],
   },
 };
 
