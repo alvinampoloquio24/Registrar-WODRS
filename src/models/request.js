@@ -7,6 +7,18 @@ const requestSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    name: {
+      type: String,
+    },
+    year: {
+      type: String,
+    },
+    course: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
     controlNumber: {
       type: String,
     },
@@ -27,21 +39,18 @@ const requestSchema = new Schema(
         type: String,
       },
     ],
-    relationshipToOwner: {
-      type: String,
-    },
     status: {
       type: String,
       enum: ["pending", "approved"],
       default: "pending",
     },
-    image: {
-      type: String,
-    },
     claim: {
       type: {
         name: {
           type: String,
+        },
+        amount: {
+          type: Number,
         },
         dateClaim: {
           type: Date,
@@ -51,11 +60,6 @@ const requestSchema = new Schema(
     },
     clearance: {
       type: String,
-    },
-    paymentMethod: {
-      type: String,
-      enum: ["cash", "Gcash"],
-      default: "cash",
     },
     noOfCopies: {
       type: String,

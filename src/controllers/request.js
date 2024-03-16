@@ -10,11 +10,6 @@ const addRequest = async function (req, res) {
     data.ownerId = req.user._id;
     data.controlNumber = generateControlNumber();
 
-    if (req.files && req.files.image && req.files.image.length > 0) {
-      const image = await cloudinary.uploader.upload(req.files.image[0].path);
-      data.image = image.url;
-    }
-
     if (req.files && req.files.clearance && req.files.clearance.length > 0) {
       const clearanceImage = await cloudinary.uploader.upload(
         req.files.clearance[0].path
@@ -23,6 +18,7 @@ const addRequest = async function (req, res) {
     }
 
     const request = await Request.create(data);
+    delete request.status;
     await Transaction.create({ requestDetails: request });
     const documentType = request.documentationType.join(", ");
 
@@ -219,12 +215,12 @@ const getControlNumber = async function (req, res) {
 const approveRequest = async function (req, res) {
   try {
     const id = req.params.id;
-    const name = req.body.name;
+    const { name, amount } = req.body;
     const request = await Request.findByIdAndUpdate(
       id,
       {
         status: "approve",
-        claim: { name },
+        claim: { name, amount },
       },
       { new: true }
     );
@@ -232,6 +228,16 @@ const approveRequest = async function (req, res) {
       return res.status(400).json({ message: "No tarnsaction in this Id. " });
     }
     return res.status(201).json({ message: "Approve Successfully", request });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
+  }
+};
+const getAllRequest = async function (req, res) {
+  try {
+    const requests = await Request.find();
+    return res.status(200).json(requests);
   } catch (error) {
     return res
       .status(500)
@@ -250,4 +256,5 @@ module.exports = {
   getAllRequestStatus,
   getControlNumber,
   approveRequest,
+  getAllRequest,
 };

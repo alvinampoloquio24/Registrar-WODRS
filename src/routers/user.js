@@ -22,6 +22,7 @@ const {
   getAllRequestStatus,
   getControlNumber,
   approveRequest,
+  getAllRequest,
 } = require("../controllers/request");
 const {
   addCourse,
@@ -52,13 +53,16 @@ router.post(
   "/addRequest",
   auth,
   permission("create", "Request"),
-  upload.fields([
-    { name: "image", maxCount: 1 },
-    { name: "clearance", maxCount: 1 },
-  ]),
+  upload.fields([{ name: "clearance", maxCount: 1 }]),
   addRequest
 );
 router.get("/getRequests", auth, permission("read", "Request"), getRequests);
+router.get(
+  "/getAllRequest",
+  auth,
+  permission("readAll", "Request"),
+  getAllRequest
+);
 router.get(
   "/getSelfRequest",
   auth,

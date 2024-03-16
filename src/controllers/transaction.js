@@ -39,7 +39,6 @@ const approvePayment = async function (req, res) {
     if (!transaction) {
       return res.status(400).json({ message: "Not found. " });
     }
-    const reqId = transaction.requestDetails._id;
 
     return res.status(200).json(transaction);
   } catch (error) {
