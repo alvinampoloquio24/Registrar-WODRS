@@ -22,7 +22,7 @@ const addRequest = async function (req, res) {
     await Transaction.create({ requestDetails: request });
     const documentType = request.documentationType.join(", ");
 
-    await sendEmail(request.controlNumber, documentType, data.emailAddress);
+    // await sendEmail(request.controlNumber, documentType, data.emailAddress);
     return res.status(201).json({ message: "Add successfully", request });
   } catch (error) {
     return res

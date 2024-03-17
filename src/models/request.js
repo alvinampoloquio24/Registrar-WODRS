@@ -57,7 +57,9 @@ const requestSchema = new Schema(
           default: Date.now,
         },
       },
+      _id: false, // Prevent Mongoose from generating _id for the claim subdocument
     },
+
     clearance: {
       type: String,
     },
