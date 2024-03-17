@@ -56,14 +56,12 @@ const getRequestStatus = async function (req, res) {
   try {
     const id = req.user._id;
 
-    const [pending, complete, processing, realising] = await Promise.all([
+    const [pending, approve] = await Promise.all([
       Request.countDocuments({ ownerId: id, status: "pending" }),
-      Request.countDocuments({ ownerId: id, status: "complete" }),
-      Request.countDocuments({ ownerId: id, status: "processing" }),
-      Request.countDocuments({ ownerId: id, status: "realising" }),
+      Request.countDocuments({ ownerId: id, status: "approve" }),
     ]);
 
-    const status = { pending, realising, complete, processing };
+    const status = { pending, approve };
 
     return res.status(200).json(status);
   } catch (error) {
@@ -175,22 +173,35 @@ const getDocumentReport = async function (req, res) {
 };
 const getAllRequestStatus = async function (req, res) {
   try {
-    const [pending, complete, processing, realising] = await Promise.all([
+    const [pending, approve, amountData] = await Promise.all([
       Request.countDocuments({ status: "pending" }),
-      Request.countDocuments({ status: "complete" }),
-      Request.countDocuments({ status: "processing" }),
-      Request.countDocuments({ status: "realising" }),
+      Request.countDocuments({ status: "approve" }),
+      Request.aggregate([
+        {
+          $match: { "claim.amount": { $exists: true } },
+        },
+        {
+          $group: {
+            _id: null,
+            totalAmount: { $sum: "$claim.amount" },
+          },
+        },
+      ]),
     ]);
 
-    const status = { pending, realising, complete, processing };
+    // Extract the total amount from the aggregation result
+    const totalAmount = amountData.length > 0 ? amountData[0].totalAmount : 0;
+
+    const status = { pending, approve, totalAmount };
 
     return res.status(200).json(status);
   } catch (error) {
     return res
       .status(500)
-      .json({ message: "Somthing went wrong. ", error: error.message });
+      .json({ message: "Something went wrong.", error: error.message });
   }
 };
+
 const generateControlNumber = function () {
   // Generate a random 8-byte hex string
   const uniqueId = crypto.randomBytes(8).toString("hex");
