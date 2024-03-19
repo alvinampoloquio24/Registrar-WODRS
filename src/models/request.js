@@ -60,7 +60,7 @@ const requestSchema = new Schema(
       _id: false, // Prevent Mongoose from generating _id for the claim subdocument
     },
 
-    clearance: {
+    image: {
       type: String,
     },
     noOfCopies: {

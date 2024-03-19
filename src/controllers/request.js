@@ -10,11 +10,9 @@ const addRequest = async function (req, res) {
     data.ownerId = req.user._id;
     data.controlNumber = generateControlNumber();
 
-    if (req.files && req.files.clearance && req.files.clearance.length > 0) {
-      const clearanceImage = await cloudinary.uploader.upload(
-        req.files.clearance[0].path
-      );
-      data.clearance = clearanceImage.url;
+    if (req.files && req.files.image && req.files.image.length > 0) {
+      const image = await cloudinary.uploader.upload(req.files.image[0].path);
+      data.image = image.url;
     }
 
     const request = await Request.create(data);

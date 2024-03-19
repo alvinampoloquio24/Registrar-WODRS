@@ -53,7 +53,7 @@ router.post(
   "/addRequest",
   auth,
   permission("create", "Request"),
-  upload.fields([{ name: "clearance", maxCount: 1 }]),
+  upload.fields([{ name: "image", maxCount: 1 }]),
   addRequest
 );
 router.get("/getRequests", auth, permission("read", "Request"), getRequests);
