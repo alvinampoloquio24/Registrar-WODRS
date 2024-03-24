@@ -23,6 +23,8 @@ const {
   getControlNumber,
   approveRequest,
   getAllRequest,
+  approvePayment,
+  updateRequest,
 } = require("../controllers/request");
 const {
   addCourse,
@@ -32,7 +34,7 @@ const {
 } = require("../controllers/course");
 const {
   getAllTransaction,
-  approvePayment,
+
   getSelfTransaction,
 } = require("../controllers/transaction");
 const { createFeedBack, getFeedback } = require("../controllers/feedBack");
@@ -53,7 +55,7 @@ router.post(
   "/addRequest",
   auth,
   permission("create", "Request"),
-  upload.fields([{ name: "image", maxCount: 1 }]),
+  upload.single("image"),
   addRequest
 );
 router.get("/getRequests", auth, permission("read", "Request"), getRequests);
@@ -85,6 +87,7 @@ router.post(
   "/editSelfRequest/:id",
   auth,
   permission("updateSelf", "Request"),
+  upload.single("image"),
   editSelfRequest
 );
 router.delete(
@@ -111,6 +114,18 @@ router.post(
   permission("update", "Request"),
   approveRequest
 );
+router.post(
+  "/approvePayment/:id",
+  auth,
+  permission("update", "Request"),
+  approvePayment
+);
+router.post(
+  "/updateRequest/:id",
+  auth,
+  permission("update", "Request"),
+  updateRequest
+);
 
 //course
 router.post("/addCourse", auth, permission("create", "Course"), addCourse);
@@ -136,12 +151,7 @@ router.get(
   permission("read", "Transaction"),
   getAllTransaction
 );
-router.post(
-  "/approvePayment/:id",
-  auth,
-  permission("update", "Transaction"),
-  approvePayment
-);
+
 router.post(
   "/createFeedback",
   auth,

@@ -41,23 +41,17 @@ const requestSchema = new Schema(
     ],
     status: {
       type: String,
-      enum: ["pending", "approved"],
+      enum: [
+        "pending",
+        "approved",
+        "waiting for payment",
+        "waiting for approval",
+      ],
       default: "pending",
     },
-    claim: {
-      type: {
-        name: {
-          type: String,
-        },
-        amount: {
-          type: Number,
-        },
-        dateClaim: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-      _id: false, // Prevent Mongoose from generating _id for the claim subdocument
+
+    amount: {
+      type: Number,
     },
 
     image: {

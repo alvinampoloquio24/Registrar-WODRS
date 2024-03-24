@@ -10,17 +10,18 @@ const addRequest = async function (req, res) {
     data.ownerId = req.user._id;
     data.controlNumber = generateControlNumber();
 
-    if (req.files && req.files.image && req.files.image.length > 0) {
-      const image = await cloudinary.uploader.upload(req.files.image[0].path);
+    if (req.file && req.file.path) {
+      // Check if req.file exists before accessing its path
+      const image = await cloudinary.uploader.upload(req.file.path);
       data.image = image.url;
     }
-
     const request = await Request.create(data);
     delete request.status;
     await Transaction.create({ requestDetails: request });
     const documentType = request.documentationType.join(", ");
 
     // await sendEmail(request.controlNumber, documentType, data.emailAddress);
+    console.log(request);
     return res.status(201).json({ message: "Add successfully", request });
   } catch (error) {
     return res
@@ -85,11 +86,18 @@ const editSelfRequest = async function (req, res) {
     const requestId = req.params.id;
     const id = req.user._id;
     const update = req.body;
+    delete update.controlNumber;
     if (!requestId) {
       return res.status(400).json({
         message: "Request Id is required. ",
       });
     }
+    if (req.file && req.file.path) {
+      // Check if req.file exists before accessing its path
+      const image = await cloudinary.uploader.upload(req.file.path);
+      update.image = image.url;
+    }
+
     const request = await Request.findOneAndUpdate(
       {
         ownerId: id,
@@ -131,19 +139,17 @@ const deleteRequest = async function (req, res) {
 };
 const getDocumentReport = async function (req, res) {
   try {
-    // Aggregate documents to count how many belong to each documentationType
-    const aggregation = await Request.aggregate([
-      {
-        $group: {
-          _id: "$documentationType", // Group by the 'documentationType' field
-          count: { $sum: 1 }, // Count the documents in each group
-        },
-      },
-    ]);
+    // Fetch all requests
+    const requests = await Request.find({});
 
-    // Initialize an object to hold your counts
-    let counts = {
-      total: 0,
+    console.log(requests);
+    if (!requests) {
+      return res.status(404).json({ message: "No requests found." });
+    }
+
+    // Initialize total document count
+    let report = {
+      totalDocument: 0,
       TOR: 0,
       COR: 0,
       COG: 0,
@@ -153,22 +159,71 @@ const getDocumentReport = async function (req, res) {
       Others: 0,
     };
 
-    // Map the aggregation results to your counts object
-    aggregation.forEach((group) => {
-      counts.total += group.count; // Increment the total count
-      if (counts.hasOwnProperty(group._id)) {
-        counts[group._id] = group.count;
-      }
-    });
+    // Loop through each request
+    for (const request of requests) {
+      // Increment totalDocument count
+      report.totalDocument += request.documentationType.length;
 
-    // Respond with the counts
-    res.status(200).json(counts);
+      // Loop through each document type in the request
+
+      for (let a = 0; a <= request.documentationType.length; a++) {
+        console.log(request.documentationType[a], "o");
+        switch (request.documentationType[a]) {
+          case "COR":
+            report.COR++;
+            break;
+          case "TOR":
+            report.TOR++;
+            break;
+          case "COG":
+            report.COG++;
+            break;
+          case "COE":
+            report.COE++;
+            break;
+          case "goodMoral":
+            report.goodMoral++;
+            break;
+          case "CAV":
+            report.CAV++;
+            break;
+          default:
+            report.Others++; // Ensure you have initialized Others in the report
+        }
+      }
+    }
+
+    // Respond with the total count of documents
+    res.status(200).json(report);
   } catch (error) {
+    console.error("Error fetching requests:", error);
     return res
       .status(500)
-      .json({ message: "Somthing went wrong. ", error: error.message });
+      .json({ message: "Something went wrong.", error: error.message });
   }
 };
+const approvePayment = async function (req, res) {
+  try {
+    const id = req.params.id;
+    const updatedRequest = await Request.findByIdAndUpdate(
+      id,
+      {
+        status: "waiting for approval",
+      },
+      { new: true }
+    );
+
+    if (!updatedRequest) {
+      return res.status(404).json({ message: "No request found with this id" });
+    }
+
+    res.status(200).json({ message: "Success", request: updatedRequest });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 const getAllRequestStatus = async function (req, res) {
   try {
     const [pending, approve, amountData] = await Promise.all([
@@ -199,7 +254,13 @@ const getAllRequestStatus = async function (req, res) {
       .json({ message: "Something went wrong.", error: error.message });
   }
 };
-
+// otal: 0,
+//       TOR: 0,
+//       COR: 0,
+//       COG: 0,
+//       COE: 0,
+//       goodMoral: 0,
+//       CAV: 0,
 const generateControlNumber = function () {
   // Generate a random 8-byte hex string
   const uniqueId = crypto.randomBytes(8).toString("hex");
@@ -253,6 +314,21 @@ const getAllRequest = async function (req, res) {
       .json({ message: "Somthing went wrong. ", error: error.message });
   }
 };
+const updateRequest = async function (req, res) {
+  try {
+    const id = req.params.id;
+    const request = await Request.findByIdAndUpdate(id, req.body);
+
+    if (!request) {
+      return res.status(400).json({ message: "No request in this id. " });
+    }
+    return res.status(200).json(request);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Somthing went wrong. ", error: error.message });
+  }
+};
 module.exports = {
   addRequest,
   getRequests,
@@ -266,4 +342,6 @@ module.exports = {
   getControlNumber,
   approveRequest,
   getAllRequest,
+  approvePayment,
+  updateRequest,
 };
