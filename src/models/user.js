@@ -3,30 +3,31 @@ const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 const userSchema = new Schema({
   firstName: {
-    type: String, // 'String' should be capitalized
+    type: String,
   },
+
   lastName: {
-    type: String, // 'String' should be capitalized
+    type: String,
   },
   year: {
-    type: String, // 'String' should be capitalized
+    type: String,
   },
   course: {
-    type: String, // 'String' should be capitalized
+    type: String,
   },
   email: {
-    type: String, // 'String' should be capitalized
+    type: String,
     unique: true,
   },
   password: {
-    type: String, // 'String' should be capitalized
+    type: String,
   },
   role: {
-    type: String, // 'String' should be capitalized
+    type: String,
     default: "student",
     enum: ["cashier", "student", "registrar", "admin"],
   },
 });
 
-const User = model("User", userSchema); // 'new' is not required here
+const User = model("User", userSchema);
 module.exports = User;

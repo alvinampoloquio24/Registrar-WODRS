@@ -226,17 +226,25 @@ const approvePayment = async function (req, res) {
 
 const getAllRequestStatus = async function (req, res) {
   try {
-    const [pending, approve, amountData] = await Promise.all([
+    const [
+      pending,
+      approve,
+      waitingForPayment,
+      waitingForApproval,
+      amountData,
+    ] = await Promise.all([
       Request.countDocuments({ status: "pending" }),
-      Request.countDocuments({ status: "approve" }),
+      Request.countDocuments({ status: "approve" }), // Count documents with status "approve"
+      Request.countDocuments({ status: "waiting for payment" }),
+      Request.countDocuments({ status: "waiting for approval" }),
       Request.aggregate([
         {
-          $match: { "claim.amount": { $exists: true } },
+          $match: { "claim.amount": { $exists: true } }, // Match documents where claim.amount exists
         },
         {
           $group: {
-            _id: null,
-            totalAmount: { $sum: "$claim.amount" },
+            _id: null, // Group all matching documents together (null means no grouping key)
+            totalAmount: { $sum: "$claim.amount" }, // Sum all claim.amount values
           },
         },
       ]),
@@ -245,7 +253,14 @@ const getAllRequestStatus = async function (req, res) {
     // Extract the total amount from the aggregation result
     const totalAmount = amountData.length > 0 ? amountData[0].totalAmount : 0;
 
-    const status = { pending, approve, totalAmount };
+    // Ensure that the 'waitingForPayment' and 'waitingForApproval' statuses are included in the response
+    const status = {
+      pending,
+      approve,
+      waitingForPayment,
+      waitingForApproval,
+      totalAmount, // Include the totalAmount in the response
+    };
 
     return res.status(200).json(status);
   } catch (error) {
@@ -254,6 +269,7 @@ const getAllRequestStatus = async function (req, res) {
       .json({ message: "Something went wrong.", error: error.message });
   }
 };
+
 // otal: 0,
 //       TOR: 0,
 //       COR: 0,
